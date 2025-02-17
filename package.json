@@ -1,0 +1,23 @@
+{
+  "name": "assist_ti",
+  "version": "1.0.0",
+  "description": "Desenvolvimento de um sistema desktop para gestão de ordem de serviço de uma assistência técnica de computadores e notebooks",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Amorimo/Assist_ti.git"
+  },
+  "author": "Matheus Amorim",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Amorimo/Assist_ti/issues"
+  },
+  "homepage": "https://github.com/Amorimo/Assist_ti#readme",
+  "devDependencies": {
+    "electron": "^34.2.0"
+  }
+}
