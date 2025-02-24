@@ -1,1 +1,25 @@
 @charset "utf-8";
+/* Botões da tela principal */
+.button img{
+    margin: 50px 15px 25px 15px;
+    padding: 5px;
+    border: 1px solid #e8e8e8;
+    cursor: pointer;
+}
+
+/* Rodapé */
+
+footer{
+    width: 100%;
+    height: 40px;
+    text-align: center;
+    background-color: black;
+    position: fixed;
+    bottom: 0;
+}
+
+footer p{
+   color: white;
+   padding-top: 10px;
+}
+   

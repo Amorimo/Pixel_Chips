@@ -1,7 +1,3 @@
-![GitHub License](https://img.shields.io/github/license/Amorimo/Assist_ti)
+# Pixel & Chips
 
-# Assist_ti
-Desenvolvimento de um sistema desktop para gestão de ordem de serviço de uma assistência técnica de computadores e notebooks
-
-## Autor
-Matheus Amorim
+Assistência técnica de video games retrô
