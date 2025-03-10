@@ -11,12 +11,12 @@
      <link rel="stylesheet" href="../public/css/style.css">
 
      <!-- Impedir a execução de scripts externos ou não autorizados -->
-      <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline '">
+     <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline'">
 </head>
 <body>
     <div class="container button">
-       <img src="../public/img/clientes.png" alt="Clientes" title="Cadastro de clientes">
-       <img src="../public/img/os.png" alt="Lapis" title="Emissão de OS">
+       <img src="../public/img/clientes.png" alt="Clientes" title="Cadastro de clientes" onclick="cliente()">
+       <img src="../public/img/os.png" alt="Lapis" title="Emissão de OS" onclick="os()">
        <img src="../public/img/estoque.png" alt="Caixa" title="Estoque">
        <img src="../public/img/financeiro.png" alt="Cifrão" title="Financeiro">
        <img src="../public/img/controle.png" alt="Cifrão" title="Financeiro">
@@ -30,5 +30,6 @@
     <!-- Bootstrap -->
      <script src="../public/js/bootstrap.min.js"></script>
      <script src="../public/js/script.js"></script>
+     <script src="renderer.js"></script>
 </body>
 </html>

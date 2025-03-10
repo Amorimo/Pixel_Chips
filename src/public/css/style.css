@@ -22,4 +22,12 @@ footer p{
    color: white;
    padding-top: 10px;
 }
-   
+
+
+#btnReset {
+    width: 38px;
+    height: 38px;
+    background-image: url(../img/xis.png);
+    border: none;
+    cursor: pointer;
+}
