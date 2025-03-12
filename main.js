@@ -149,10 +149,12 @@ const template = [
           label:'Clientes'
         },
         {
-          label:'OS Abertas'
+          label:'OS Abertas',
+          click:()=> osWindow()
         },
         {
-          label:'OS Concluídas'
+          label:'OS Concluídas',
+          click:()=> osWindow()
         }
       ]
   },    
