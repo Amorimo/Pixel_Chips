@@ -14,3 +14,7 @@ function os() {
    // console.log("teste do botão os")
     api.osWindow()
 }
+
+function estoque(){
+    api.estoqueWindow()
+}

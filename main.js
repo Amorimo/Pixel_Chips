@@ -34,6 +34,10 @@ const createWindow = () => {
     osWindow()
   })
 
+  ipcMain.on('estoque-Window',()=>{
+    estoqueWindow()
+  })
+
 // Janela sobre
 function aboutWindow(){
   nativeTheme.themeSource='system'
@@ -93,6 +97,23 @@ function osWindow(){
   }
   os.loadFile('./src/views/os.html')
   os.center() // Iniciar no centro da tela
+}
+
+// Janela estoque
+function estoqueWindow() {
+  nativeTheme.themeSource = 'system';
+  const main = BrowserWindow.getFocusedWindow(); 
+  if (main) {
+    estoque = new BrowserWindow({
+      width: 1010,
+      height: 720,
+      resizable: false,
+      parent: main,
+      modal: true
+    });
+  }
+  estoque.loadFile('./src/views/estoque.html');
+  estoque.center();
 }
 // Iniciar a aplicação
 app.whenReady().then(() => {
@@ -155,6 +176,10 @@ const template = [
         {
           label:'OS Concluídas',
           click:()=> osWindow()
+        },
+        {
+          label:'Estoque',
+          click:()=>estoqueWindow()
         }
       ]
   },    

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controle de Estoque</title>
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="../public/css/bootstrap.min.css">
+    <!-- CSS personalizado -->
+    <link rel="stylesheet" href="../public/css/style.css">
+    <!-- Impedir execução de scripts não autorizados -->
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline'">
+</head>
+<body>
+    <div class="container">
+        <form id="frmEstoque" class="mt-2 row g-3">
+            <!-- Buscar produto -->
+            <div class="col-md-6">
+                <input type="text" class="form-control" id="searchProduto" maxlength="30" spellcheck="false">
+            </div>
+            <div class="col-md-4">
+                <button type="button" class="btn btn-primary" id="btnSearchProduto" onclick="searchProduto()">Buscar</button>
+            </div>
+
+            <hr class="mt-4 border border-primary border -1">
+
+            <!-- Nome do Produto -->
+            <div class="col-md-8">
+                <label for="inputNomeProduto" class="form-label">Nome do Produto</label>
+                <input type="text" class="form-control" id="inputNomeProduto" spellcheck="false" required maxlength="50">
+            </div>
+
+            <!-- Código do Produto -->
+            <div class="col-md-4">
+                <label for="inputCodigoProduto" class="form-label">Código do Produto</label>
+                <input type="text" class="form-control" id="inputCodigoProduto" spellcheck="false" required maxlength="20">
+            </div>
+
+            <!-- Quantidade -->
+            <div class="col-md-4">
+                <label for="inputQuantidadeProduto" class="form-label">Quantidade</label>
+                <input type="number" class="form-control" id="inputQuantidadeProduto" min="1" required>
+            </div>
+
+            <!-- Preço -->
+            <div class="col-md-4">
+                <label for="inputPrecoProduto" class="form-label">Preço</label>
+                <input type="text" class="form-control" id="inputPrecoProduto" required maxlength="10">
+            </div>
+
+            <!-- Categoria -->
+            <div class="col-md-4">
+                <label for="inputCategoriaProduto" class="form-label">Categoria</label>
+                <input type="text" class="form-control" id="inputCategoriaProduto" required maxlength="30">
+            </div>
+
+            <!-- Botões -->
+            <div class="mt-5">
+                <button type="submit" class="btn btn-success" id="btnCreateProduto">Adicionar Produto</button>
+                <button type="submit" class="btn btn-warning" id="btnUpdateProduto">Editar Produto</button>
+                <button type="button" class="btn btn-danger" id="btnDeleteProduto">Excluir Produto</button>
+                <button type="reset" class="btn" id="btnResetProduto" onclick="resetFormEstoque()"></button>
+            </div>
+
+        </form>
+    </div>
+
+    <!-- Bootstrap -->
+    <script src="../public/js/bootstrap.min.js"></script>
+    <!-- Script para interagir com o estoque -->
+    <script src="rendererEstoque.js"></script>
+</body>
+</html>
