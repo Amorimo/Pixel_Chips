@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controle Financeiro</title>
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="../public/css/bootstrap.min.css">
+    <!-- CSS personalizado -->
+    <link rel="stylesheet" href="../public/css/style.css">
+    <!-- Segurança contra scripts externos -->
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline'">
+</head>
+<body>
+    <div class="container">
+        <h2 class="mt-4">Controle Financeiro</h2>
+
+        <!-- Saldo total -->
+        <div class="alert alert-info mt-3">
+            <h4>Saldo Atual: R$ <span id="saldoTotal">0.00</span></h4>
+        </div>
+
+        <!-- Formulário de entrada e saída -->
+        <form id="frmFinanceiro" class="mt-2 row g-3">
+            <!-- Tipo de transação -->
+            <div class="col-md-4">
+                <label for="tipoTransacao" class="form-label">Tipo</label>
+                <select class="form-select" id="tipoTransacao" required>
+                    <option value="receita">Receita 💰</option>
+                    <option value="despesa">Despesa 📉</option>
+                </select>
+            </div>
+
+            <!-- Descrição -->
+            <div class="col-md-6">
+                <label for="descricao" class="form-label">Descrição</label>
+                <input type="text" class="form-control" id="descricao" required maxlength="50">
+            </div>
+
+            <!-- Valor -->
+            <div class="col-md-4">
+                <label for="valor" class="form-label">Valor (R$)</label>
+                <input type="number" class="form-control" id="valor" required step="0.01" min="0.01">
+            </div>
+
+            <!-- Data -->
+            <div class="col-md-4">
+                <label for="data" class="form-label">Data</label>
+                <input type="date" class="form-control" id="data" required>
+            </div>
+
+            <!-- Botões -->
+            <div class="mt-4">
+                <button type="submit" class="btn btn-success">Adicionar</button>
+                <button type="button" class="btn btn-danger" id="btnResetFinanceiro" onclick="resetFormFinanceiro()">Limpar</button>
+            </div>
+        </form>
+
+        <!-- Tabela de movimentações -->
+        <div class="mt-5">
+            <h3>Histórico de Movimentações</h3>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Descrição</th>
+                        <th>Tipo</th>
+                        <th>Valor (R$)</th>
+                        <th>Ação</th>
+                    </tr>
+                </thead>
+                <tbody id="tabelaFinanceiro">
+                    <!-- As movimentações serão inseridas aqui -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Bootstrap -->
+    <script src="../public/js/bootstrap.min.js"></script>
+    <!-- Script para interagir com a parte financeira -->
+    <script src="rendererFinanceiro.js"></script>
+</body>
+</html>
