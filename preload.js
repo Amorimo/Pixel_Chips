@@ -9,5 +9,6 @@ const {contextBridge,ipcRenderer} = require('electron')
 contextBridge.exposeInMainWorld('api',{
     clientWindow: () => ipcRenderer.send('client-Window'),
     osWindow: () => ipcRenderer.send('os-Window'),
-    estoqueWindow:()=>ipcRenderer.send('estoque-Window')
+    estoqueWindow:()=>ipcRenderer.send('estoque-Window'),
+    financeiroWindow:()=>ipcRenderer.send('financeiro-Window')
 })

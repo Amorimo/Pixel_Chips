@@ -18,3 +18,7 @@ function os() {
 function estoque(){
     api.estoqueWindow()
 }
+
+function financeiro(){
+    api.financeiroWindow()
+}

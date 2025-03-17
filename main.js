@@ -38,6 +38,10 @@ const createWindow = () => {
     estoqueWindow()
   })
 
+  ipcMain.on('financeiro-Window',()=>{
+    financeiroWindow()
+  })
+
 // Janela sobre
 function aboutWindow(){
   nativeTheme.themeSource='system'
@@ -115,6 +119,23 @@ function estoqueWindow() {
   estoque.loadFile('./src/views/estoque.html');
   estoque.center();
 }
+
+function financeiroWindow(){
+  nativeTheme.themeSource='system'
+  const main = BrowserWindow.getFocusedWindow()
+  if(main){
+    financeiro=new BrowserWindow({
+      width:1010,
+      height:720,
+      resizable:false,
+      parent:main,
+      modal:true
+    })
+  }
+  financeiro.loadFile('./src/views/financeiro.html')
+  financeiro.center()
+}
+
 // Iniciar a aplicação
 app.whenReady().then(() => {
     createWindow()
@@ -180,6 +201,10 @@ const template = [
         {
           label:'Estoque',
           click:()=>estoqueWindow()
+        },
+        {
+          label:'Financeiro',
+          click:()=>financeiroWindow()
         }
       ]
   },    
