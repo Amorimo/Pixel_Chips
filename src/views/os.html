@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ordem de Serviço</title>
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="../public/css/bootstrap.min.css">
+    <!-- CSS personalizado -->
+    <link rel="stylesheet" href="../public/css/style.css">
+    <!-- Segurança -->
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline'">
+</head>
+<body>
+    <div class="container">
+        <h2 class="mt-4">Cadastro de Ordem de Serviço</h2>
+        <form id="frmOS" class="mt-2 row g-1">
+            
+            <!-- Buscar OS -->
+            <div class="col-md-6">
+                <input type="text" class="form-control" id="searchOS" placeholder="Buscar OS" maxlength="30">
+            </div>
+            <div class="col-md-4">
+                <button type="button" class="btn btn-primary" id="btnRead">Buscar</button>
+            </div>
+            <hr class="mt-4 border border-primary">
+            
+            <!-- Dados do Cliente -->
+            <h4>Dados do Cliente</h4>
+            <div class="col-md-8">
+                <label for="inputNameClient" class="form-label">Nome</label>
+                <input type="text" class="form-control" id="inputNameClient" required maxlength="30">
+            </div>
+            <div class="col-md-4">
+                <label for="inputPhoneClient" class="form-label">Telefone</label>
+                <input type="text" class="form-control" id="inputPhoneClient" required maxlength="15">
+            </div>
+            
+            <!-- Dados do Aparelho -->
+            <h4>Dados do Aparelho</h4>
+            <div class="col-md-6">
+                <label for="inputDevice" class="form-label">Console</label>
+                <input type="text" class="form-control" id="inputDevice" required maxlength="30">
+            </div>
+            <div class="col-md-6">
+                <label for="inputModel" class="form-label">Modelo</label>
+                <input type="text" class="form-control" id="inputModel" required maxlength="30">
+            </div>
+            <div class="col-md-12">
+                <label for="inputDefect" class="form-label">Descrição do Defeito</label>
+                <textarea class="form-control" id="inputDefect" rows="1" required></textarea>
+            </div>
+            
+            <!-- Status do Serviço -->
+            <h4>Status do Serviço</h4>
+            <div class="col-md-6">
+                <label for="inputStatus" class="form-label">Status</label>
+                <select class="form-select" id="inputStatus" required>
+                    <option value="Recebido">Recebido</option>
+                    <option value="Em andamento">Em andamento</option>
+                    <option value="Aguardando peça">Aguardando peça</option>
+                    <option value="Finalizado">Finalizado</option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label for="inputCost" class="form-label">Valor Estimado</label>
+                <input type="text" class="form-control" id="inputCost" required maxlength="10">
+            </div>
+            
+            <!-- Botões -->
+            <div class="mt-4">
+                <button type="submit" class="btn btn-success">Criar OS</button>
+                <button type="submit" class="btn btn-warning">Editar OS</button>
+                <button type="button" class="btn btn-danger">Excluir</button>
+                <button type="reset" class="btn btn-secondary">Limpar</button>
+            </div>
+        </form>
+    </div>
+    
+    <!-- Bootstrap -->
+    <script src="../public/js/bootstrap.min.js"></script>
+    <!-- Renderizador -->
+     <script src="../views/rendererOs.js"></script>
+</body>
+</html>
