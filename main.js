@@ -19,6 +19,8 @@ const osModel = require('./src/models/Os.js')
 
 const estoqueModel = require('./src/models/Estoque.js');
 
+const Financeiro = require('./src/models/Financeiro.js');
+
 
 // Importação do pacote jspdf (npm i jspdf)
 const { jspdf, default: jsPDF } = require('jspdf')
@@ -473,3 +475,117 @@ ipcMain.on('new-os', async (event, osData) => {
 
 // == Fim -Os - CRUD Create
 // ============================================================
+// ====================================================================================================
+// Estoque - CRUD Create
+ipcMain.on('new-estoque', async (event, estoqueData) => {
+  console.log("Novo item de estoque recebido:", estoqueData);
+
+  try {
+    const novoEstoque = new estoqueModel({
+      nome: estoqueData.nome,
+      quantidade: estoqueData.quantidade,
+      preco: estoqueData.preco,
+      descricao: estoqueData.descricao,
+      fornecedor: estoqueData.fornecedor,
+      dataEntrada: new Date()
+    });
+
+    await novoEstoque.save();
+
+    event.reply('reset-form-estoque'); // avisa o renderer pra limpar o formulário
+  } catch (error) {
+    console.error("Erro ao salvar item de estoque:", error);
+  }
+});
+// == Fim Estoque CRUD Create
+// ====================================================================================================
+
+// ====================================================================================================
+// Financeiro - CRUD Create
+ipcMain.on('new-financeiro', async (event, financeiroData) => {
+  console.log("Novo lançamento financeiro recebido:", financeiroData);
+
+  try {
+    const novoLancamento = new Financeiro({
+      tipo: financeiroData.tipo, // 'Receita' ou 'Despesa'
+      descricao: financeiroData.descricao,
+      valor: financeiroData.valor,
+      data: financeiroData.data ? new Date(financeiroData.data) : new Date()
+    });
+
+    await novoLancamento.save();
+
+    event.reply('reset-form-financeiro'); // avisa o renderer pra limpar o formulário
+  } catch (error) {
+    console.error("Erro ao salvar lançamento financeiro:", error);
+  }
+});
+// == Fim Financeiro CRUD Create
+// ====================================================================================================
+
+// ====================================================================================================
+// Relatório de Estoque
+async function relatorioEstoque() {
+  try {
+    const estoque = await estoqueModel.find().sort({ nome: 1 });
+
+    const doc = new jsPDF('p', 'mm', 'a4');
+
+    const imagePath = path.join(__dirname, 'src', 'public', 'img', 'logo.png');
+    const imageBase64 = fs.readFileSync(imagePath, { encoding: 'base64' });
+    doc.addImage(imageBase64, 'PNG', 5, 8);
+
+    doc.setFontSize(18);
+    doc.text("Relatório de Estoque", 14, 45);
+
+    const dataAtual = new Date().toLocaleDateString('pt-BR');
+    doc.setFontSize(12);
+    doc.text(`Data: ${dataAtual}`, 165, 10);
+
+    let y = 60;
+    doc.text("Nome", 14, y);
+    doc.text("Quantidade", 80, y);
+    doc.text("Preço", 140, y);
+    y += 5;
+    doc.setLineWidth(0.5);
+    doc.line(10, y, 200, y);
+    y += 10;
+
+    estoque.forEach((item) => {
+      if (y > 280) {
+        doc.addPage();
+        y = 20;
+
+        doc.text("Nome", 14, y);
+        doc.text("Quantidade", 80, y);
+        doc.text("Preço", 140, y);
+        y += 5;
+        doc.setLineWidth(0.5);
+        doc.line(10, y, 200, y);
+        y += 10;
+      }
+      doc.text(item.nome, 14, y);
+      doc.text(item.quantidade.toString(), 80, y);
+      doc.text(`R$ ${item.preco.toFixed(2)}`, 140, y);
+      y += 10;
+    });
+
+    const paginas = doc.internal.getNumberOfPages();
+    for (let i = 1; i <= paginas; i++) {
+      doc.setPage(i);
+      doc.setFontSize(10);
+      doc.text(`Página ${i} de ${paginas}`, 105, 290, { align: 'center' });
+    }
+
+    const tempDir = app.getPath('temp');
+    const filePath = path.join(tempDir, 'estoque.pdf');
+
+    doc.save(filePath);
+
+    shell.openPath(filePath);
+  } catch (error) {
+    console.error(error);
+  }
+}
+// == Fim Relatório de Estoque
+// ====================================================================================================

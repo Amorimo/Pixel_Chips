@@ -26,4 +26,11 @@ contextBridge.exposeInMainWorld('api', {
 
   // Reseta o form de OS
   resetFormOS: (callback) => ipcRenderer.on('reset-form-os', callback),
+
+  // Cadastro de Financeiro
+  newFinanceiro: (financeiroData) => ipcRenderer.send('new-financeiro', financeiroData),
+
+  // Reseta o form de Financeiro
+  resetFormFinanceiro: (callback) => ipcRenderer.on('reset-form-financeiro', callback),
+
 });
