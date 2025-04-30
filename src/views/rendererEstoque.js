@@ -1,5 +1,5 @@
 // Foco na busca por Estoque
-const focoEstoque = document.getElementById('searchEstoque');
+const focoEstoque = document.getElementById('searchProduto');
 
 // Iniciar a janela de Estoque desabilitando botões
 document.addEventListener('DOMContentLoaded', () => {
@@ -8,11 +8,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Captura dos dados do formulário de Estoque
 const frmEstoque = document.getElementById('frmEstoque');
-const nomeEstoque = document.getElementById('inputNomeEstoque');
-const codigoEstoque = document.getElementById('inputCodigoEstoque');
-const quantidadeEstoque = document.getElementById('inputQuantidadeEstoque');
-const precoEstoque = document.getElementById('inputPrecoEstoque');
-const categoriaEstoque = document.getElementById('inputCategoriaEstoque');
+const nomeEstoque = document.getElementById('inputNomeProduto');
+const codigoEstoque = document.getElementById('inputCodigoProduto');
+const quantidadeEstoque = document.getElementById('inputQuantidadeProduto');
+const precoEstoque = document.getElementById('inputPrecoProduto');
+const categoriaEstoque = document.getElementById('inputCategoriaProduto');
 
 // Evento de submit do formulário
 frmEstoque.addEventListener('submit', async (event) => {

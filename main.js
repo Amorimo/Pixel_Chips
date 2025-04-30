@@ -133,7 +133,7 @@ function osWindow(){
   os.center() // Iniciar no centro da tela
 }
 
-// Janela estoque
+// Janela Estoque
 function estoqueWindow() {
   nativeTheme.themeSource = 'system';
   const main = BrowserWindow.getFocusedWindow(); 
@@ -143,13 +143,17 @@ function estoqueWindow() {
       height: 720,
       resizable: false,
       parent: main,
-      modal: true
+      modal: true,
+      webPreferences:{
+        preload: path.join(__dirname, 'preload.js')
+      }
     });
   }
   estoque.loadFile('./src/views/estoque.html');
   estoque.center();
 }
 
+// Janela Financeiro
 function financeiroWindow(){
   nativeTheme.themeSource='system'
   const main = BrowserWindow.getFocusedWindow()
@@ -159,7 +163,10 @@ function financeiroWindow(){
       height:720,
       resizable:false,
       parent:main,
-      modal:true
+      modal:true,
+      webPreferences:{
+        preload: path.join(__dirname, 'preload.js')
+      }
     })
   }
   financeiro.loadFile('./src/views/financeiro.html')
@@ -486,7 +493,8 @@ ipcMain.on('new-estoque', async (event, estoqueData) => {
       quantidade: estoqueData.quantidade,
       preco: estoqueData.preco,
       descricao: estoqueData.descricao,
-      fornecedor: estoqueData.fornecedor,
+      codigo: estoqueData.codigo,
+      categoria: estoqueData.categoria,
       dataEntrada: new Date()
     });
 

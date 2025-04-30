@@ -17,20 +17,17 @@ contextBridge.exposeInMainWorld('api', {
 
   // Cadastro de cliente
   newClient: (client) => ipcRenderer.send('new-client', client),
-
-  // Reseta o form de cliente
   resetForm: (callback) => ipcRenderer.on('reset-form', callback),
 
   // Cadastro de Ordem de Serviço
   newOS: (osData) => ipcRenderer.send('new-os', osData),
-
-  // Reseta o form de OS
   resetFormOS: (callback) => ipcRenderer.on('reset-form-os', callback),
 
   // Cadastro de Financeiro
   newFinanceiro: (financeiroData) => ipcRenderer.send('new-financeiro', financeiroData),
-
-  // Reseta o form de Financeiro
   resetFormFinanceiro: (callback) => ipcRenderer.on('reset-form-financeiro', callback),
 
+  // Cadastro de Estoque
+  newEstoque: (estoqueData) => ipcRenderer.send('new-estoque', estoqueData),
+  resetFormEstoque: (callback) => ipcRenderer.on('reset-form-estoque', callback)
 });

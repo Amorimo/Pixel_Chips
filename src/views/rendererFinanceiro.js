@@ -1,9 +1,5 @@
-const { ipcRenderer } = require('electron');
-
-// Captura o formulário
 const frmFinanceiro = document.getElementById('frmFinanceiro');
 
-// Quando o formulário for enviado
 frmFinanceiro.addEventListener('submit', (e) => {
     e.preventDefault();
 
@@ -12,8 +8,8 @@ frmFinanceiro.addEventListener('submit', (e) => {
     const valor = parseFloat(document.getElementById('valor').value);
     const data = document.getElementById('data').value;
 
-    // Envia para o main
-    ipcRenderer.send('salvar-financeiro', {
+    // Usa a API do preload.js
+    window.api.newFinanceiro({
         tipo,
         descricao,
         valor,
@@ -22,7 +18,7 @@ frmFinanceiro.addEventListener('submit', (e) => {
 });
 
 // Escuta a resposta do main
-ipcRenderer.on('salvar-financeiro-resposta', (event, resposta) => {
+window.api.resetFormFinanceiro((_, resposta) => {
     if (resposta.sucesso) {
         alert('Movimentação financeira salva com sucesso!');
         frmFinanceiro.reset();
@@ -39,5 +35,5 @@ function resetFormFinanceiro() {
 
 // Função para atualizar a tabela 
 async function atualizarTabelaFinanceiro() {
-   
+
 }
