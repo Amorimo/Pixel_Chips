@@ -36,10 +36,24 @@ function buscarCEP() {
         .catch(error => console.error("Erro ao buscar CEP:", error));
 }
 
-// Capturar o foco na busca pelo nome do cliente
-// A constante foco obtem o elemento HTML (input) identificada como searchClient
-const foco=document.getElementById('searchClient')
 
+
+// ============================================================
+
+// vetor global que será usado na manipulação dos dados
+let arrayClient = []
+
+// capturar o foco na busca pelo nome do cliente
+// a constante foco obtem o elemento html (input) identificado como 'searchClient'
+const foco = document.getElementById('searchClient')
+
+
+function teclaEnter(event) {
+    if (event.key === "Enter") {
+        event.preventDefault()
+        buscarCliente()
+    }
+}
 // Iniciar a janela de clientes alterando as propriedades de alguns elementos
 document.addEventListener('DOMContentLoaded',()=>{
     // Desabilitar botões
@@ -64,7 +78,32 @@ let neighborhoodClient=document.getElementById('inputNeighborhoodClient')
 let cityClient=document.getElementById('inputCityClient')
 let ufClient=document.getElementById('inputUFClient')
 
-// 
+// captura do id do cliente (usado no delete e update)
+let id = document.getElementById('idClient')
+
+
+// == Manipulação da tecla Enter ============================
+
+// Função para manipular o evento da tecla Enter
+function teclaEnter(event) {
+    // se a tecla Enter for pressionada
+    if (event.key === "Enter") {
+        event.preventDefault() // ignorar o comportamento padrão
+        // associar o Enter a busca pelo cliente
+        buscarCliente()
+    }
+}
+
+// Função para restaurar o padrão da tecla Enter (submit)
+function restaurarEnter() {
+    frmClient.removeEventListener('keydown', teclaEnter)
+}
+
+// "Escuta do evento Tecla Enter"
+frmClient.addEventListener('keydown', teclaEnter)
+
+// == Fim - manipulação tecla Enter ==========================
+
 // Evento associado ao botão submit (Uso das validações do HTML)
 frmClient.addEventListener('submit', async (event)=>{
     // Evitar o comportamento padrão do submit que é enviar os dados do formulário e reiniciar o documento HTML
@@ -94,6 +133,77 @@ frmClient.addEventListener('submit', async (event)=>{
 })
 
 // ============================================================
+
+
+//============================================================
+// == CRUD Read ===============================================
+
+function buscarCliente() {
+    //console.log("teste do botão buscar")
+    // Passo 1: capturar o nome do cliente
+    let name = document.getElementById('searchClient').value
+    console.log(name) // teste do passo 1
+
+    // validação de campo obrigatório
+    // se o campo de busca não foi preenchido
+    if (name === "") {
+        // enviar ao main um pedido para alertar o usuário
+        api.validateSearch()
+        foco.focus()
+
+    } else {
+        api.searchName(name) // Passo 2: envio do nome ao main
+        // recebimento dos dados do cliente
+        api.renderClient((event, dataClient) => {
+            console.log(dataClient) // teste do passo 5
+            // passo 6 renderizar os dados do cliente no formulário
+            // - Criar um vetor global para manipulação dos dados
+            // - criar uma constante para converter os dados recebidos (string) para o formato JASON (JSON.parse)
+            // usar o laço forEach para percorre o vetor e setar os campos (caixas de texto) do formulário
+            const dadosCliente = JSON.parse(dataClient)
+            // atribuir ao vetor os dados do cliente
+            arrayClient = dadosCliente
+            // extrair os dados do cliente
+            arrayClient.forEach((c) => {
+                id.value = c._id,
+                    nameClient.value = c.nomeCliente,
+                    cpfClient.value = c.cpfCliente,
+                    emailClient.value = c.emailCliente,
+                    phoneClient.value = c.foneCliente,
+                    cepClient.value = c.cepCliente,
+                    addressClient.value = c.logradouroCliente,
+                    numberClient.value = c.numeroCliente,
+                    complementClient.value = c.complementoCliente,
+                    neighborhoodClient.value = c.bairroCliente,
+                    cityClient.value = c.cidadeCliente,
+                    ufClient.value = c.ufCliente
+                // desativar o botão adicionar
+                btnCreate.disabled = true
+                // ativar os botões editar e excluir
+                btnUpdate.disabled = false
+                btnDelete.disabled = false
+            })
+        })
+    }
+}
+
+// setar o cliente não cadastrado (recortar do campo de busca e colar no campo nome)
+api.setClient((args) => {
+    // criar uma variável para armazenar o valor digitado no campo de busca (nome ou cpf)
+    let campoBusca = document.getElementById('searchClient').value
+    // foco no campo de nome do cliente
+    nameClient.focus()
+    // remover o valor digitado no campo de busca
+    foco.value = ""
+    // preencher o campo de nome do cliente com o nome da busca
+    nameClient.value = campoBusca
+
+})
+
+// == Fim - CRUD Read =========================================
+// ============================================================
+
+
 // == Reset form ==============================================
 function resetForm() {
     // Limpar os campos e resetar o formulário com as configurações pré definidas
@@ -107,3 +217,32 @@ api.resetForm((args) => {
 
 // == Fim - reset form ========================================
 // ============================================================
+
+// Mascara do CPF
+
+function aplicarMascaraCPF() {
+    const input = document.getElementById('inputCPFClient');
+    input.addEventListener('input', () => {
+        let value = input.value.replace(/\D/g, ''); // Remove tudo que não é número
+
+        if (value.length > 11) {
+            value = value.slice(0, 11); // Limita a 11 dígitos
+        }
+
+        value = value.replace(/(\d{3})(\d)/, '$1.$2');
+        value = value.replace(/(\d{3})(\d)/, '$1.$2');
+        value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+
+        input.value = value;
+    });
+}
+
+// Chame a função ao carregar a página
+window.addEventListener('DOMContentLoaded', () => {
+    aplicarMascaraCPF();
+});
+
+
+function validarCPF() {
+   
+}

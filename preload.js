@@ -29,5 +29,11 @@ contextBridge.exposeInMainWorld('api', {
 
   // Cadastro de Estoque
   newEstoque: (estoqueData) => ipcRenderer.send('new-estoque', estoqueData),
-  resetFormEstoque: (callback) => ipcRenderer.on('reset-form-estoque', callback)
+  resetFormEstoque: (callback) => ipcRenderer.on('reset-form-estoque', callback),
+
+  // Busca Cliente
+  searchName: (name) => ipcRenderer.send('search-name', name),
+  renderClient: (dataClient) => ipcRenderer.on('render-client', dataClient),
+  validateSearch: () => ipcRenderer.send('validate-search'),
+  setClient: (args) => ipcRenderer.on('set-client', args),
 });
