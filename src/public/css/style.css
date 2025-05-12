@@ -30,12 +30,13 @@ footer p {
     margin: 0;
     font-family: Georgia, 'Times New Roman', Times, serif;
     font-size: 1.2em;
+    
 }
 
 #btnReset {
     width: 38px;
     height: 38px;
-    background-image: url(../img/xis.png);
+    background-image: url(../img/broom.png);
     border: none;
     cursor: pointer;
 }
@@ -48,4 +49,9 @@ footer p {
     right: 5;
     border: none;
     cursor: none;
- }
+}
+
+ /* Ocultar o campo id do cliente */
+#idClient {
+    display: none;
+}

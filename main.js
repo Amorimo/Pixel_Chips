@@ -1,11 +1,8 @@
 console.log("Processo principal")
-const { app, BrowserWindow, nativeTheme, Menu, ipcMain } = require('electron')
+const {  app, BrowserWindow, nativeTheme, Menu, ipcMain, dialog, shell } = require('electron')
 
 // Linha relacionada ao preload.js
 const path = require('node:path')
-
-const { shell } = require('electron')
-
 
 
 
@@ -27,6 +24,9 @@ const { jspdf, default: jsPDF } = require('jspdf')
 
 // Importação da biblioteca fs (nativa do JavaScript) para manipulação de arquivos (no caso arquivos pdf)
 const fs = require('fs')
+
+// Importação do pacote electron-prompt (dialog de input) - npm i electron-prompt
+const prompt = require('electron-prompt')
 
 // Janela Principal
 let win
@@ -330,37 +330,37 @@ ipcMain.on('new-client', async(event,client)=>{
           cidadeCliente:client.cityCli,
           ufCliente:client.ufCli
       })
-      await newClient.save()    
-   // Mensagem de confirmação
-   dialog.showMessageBox({
-      //customização
-      type: 'info',
-      title: "Aviso",
-      message: "Cliente adicionado com sucesso",
-      buttons: ['OK']
-  }).then((result) => {
-      //ação ao pressionar o botão (result = 0)
-      if (result.response === 0) {
-          //enviar um pedido para o renderizador limpar os campos e resetar as configurações pré definidas (rótulo 'reset-form' do preload.js
-          event.reply('reset-form')
-      }
-  })
-} catch (error) {
-  // se o código de erro for 11000 (cpf duplicado) enviar uma mensagem ao usuário
-  if (error.code === 11000) {
-      dialog.showMessageBox({
-          type: 'error',
-          title: "Atenção!",
-          message: "CPF já está cadastrado\nVerifique se digitou corretamente",
-          buttons: ['OK']
-      }).then((result) => {
-          if (result.response === 0) {
-              // limpar a caixa de input do cpf, focar esta caixa e deixar a borda em vermelho
-          }
-      })
-  }
-  console.log(error)
-}
+      await newClient.save()
+        // Mensagem de confirmação
+        dialog.showMessageBox({
+            //customização
+            type: 'info',
+            title: "Aviso",
+            message: "Cliente adicionado com sucesso",
+            buttons: ['OK']
+        }).then((result) => {
+            //ação ao pressionar o botão (result = 0)
+            if (result.response === 0) {
+                //enviar um pedido para o renderizador limpar os campos e resetar as configurações pré definidas (rótulo 'reset-form' do preload.js
+                event.reply('reset-form')
+            }
+        })
+    } catch (error) {
+        // se o código de erro for 11000 (cpf duplicado) enviar uma mensagem ao usuário
+        if (error.code === 11000) {
+            dialog.showMessageBox({
+                type: 'error',
+                title: "Atenção!",
+                message: "CPF já está cadastrado\nVerifique se digitou corretamente",
+                buttons: ['OK']
+            }).then((result) => {
+                if (result.response === 0) {
+                    // limpar a caixa de input do cpf, focar esta caixa e deixar a borda em vermelho
+                }
+            })
+        }
+        console.log(error)
+    }
 })
 
 // == Fim - Clientes - CRUD Create
