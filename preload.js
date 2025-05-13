@@ -1,14 +1,39 @@
-// arquivo de pre carregamento e reforço de segurança na comunicação entre processos (IPC)
+// arquivo de pré-carregamento e reforço de segurança na comunicação entre processos (IPC)
 
-//const { contextBridge, ipcRenderer } = require("electron")
+const { contextBridge, ipcRenderer } = require('electron');
 
-// importaçao dos recursos do framework
-// contextbridge segunrança | ipcrenderer comunicação
-const {contextBridge,ipcRenderer} = require('electron')
+// Envia ao processo principal o pedido para conectar ao banco e trocar o ícone (ex: no index.html)
+ipcRenderer.send('db-connect');
 
-contextBridge.exposeInMainWorld('api',{
-    clientWindow: () => ipcRenderer.send('client-Window'),
-    osWindow: () => ipcRenderer.send('os-Window'),
-    estoqueWindow:()=>ipcRenderer.send('estoque-Window'),
-    financeiroWindow:()=>ipcRenderer.send('financeiro-Window')
-})
+contextBridge.exposeInMainWorld('api', {
+  // Navegação entre janelas
+  clientWindow: () => ipcRenderer.send('client-Window'),
+  osWindow: () => ipcRenderer.send('os-Window'),
+  estoqueWindow: () => ipcRenderer.send('estoque-Window'),
+  financeiroWindow: () => ipcRenderer.send('financeiro-Window'),
+
+  // Status da conexão com o banco
+  dbStatus: (message) => ipcRenderer.on('db-status', message),
+
+  // Cadastro de cliente
+  newClient: (client) => ipcRenderer.send('new-client', client),
+  resetForm: (callback) => ipcRenderer.on('reset-form', callback),
+
+  // Cadastro de Ordem de Serviço
+  newOS: (osData) => ipcRenderer.send('new-os', osData),
+  resetFormOS: (callback) => ipcRenderer.on('reset-form-os', callback),
+
+  // Cadastro de Financeiro
+  newFinanceiro: (financeiroData) => ipcRenderer.send('new-financeiro', financeiroData),
+  resetFormFinanceiro: (callback) => ipcRenderer.on('reset-form-financeiro', callback),
+
+  // Cadastro de Estoque
+  newEstoque: (estoqueData) => ipcRenderer.send('new-estoque', estoqueData),
+  resetFormEstoque: (callback) => ipcRenderer.on('reset-form-estoque', callback),
+
+  // Busca Cliente
+  searchName: (name) => ipcRenderer.send('search-name', name),
+  renderClient: (dataClient) => ipcRenderer.on('render-client', dataClient),
+  validateSearch: () => ipcRenderer.send('validate-search'),
+  setClient: (args) => ipcRenderer.on('set-client', args),
+});

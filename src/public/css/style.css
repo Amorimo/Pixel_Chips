@@ -1,33 +1,57 @@
 @charset "utf-8";
-/* Botões da tela principal */
-.button img{
+
+/* botões  */
+
+/* Botoes tela principal */
+.button img {
     margin: 50px 15px 25px 15px;
     padding: 5px;
     border: 1px solid #e8e8e8;
-    cursor: pointer;
+    cursor:pointer;
 }
 
-/* Rodapé */
 
-footer{
-    width: 100%;
-    height: 40px;
-    text-align: center;
+
+footer  {
     background-color: black;
+    color: white;
+    padding: 8px;
     position: fixed;
     bottom: 0;
+    width: 100%;
+    font-size: 15px;
+    justify-content: space-between;
+    display: flex;
+    padding: 5px;
+
 }
 
-footer p{
-   color: white;
-   padding-top: 10px;
+footer p {
+    margin: 0;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-size: 1.2em;
+    
 }
-
 
 #btnReset {
     width: 38px;
     height: 38px;
-    background-image: url(../img/xis.png);
+    background-image: url(../img/broom.png);
     border: none;
     cursor: pointer;
+}
+
+/*Logo*/
+
+#logo{
+    position: fixed;
+    bottom: 40px;
+    right: 5;
+    border: none;
+    cursor: none;
+}
+
+ /* Ocultar o campo id do cliente */
+#idClient {
+    display: none;
 }
