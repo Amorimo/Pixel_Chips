@@ -468,7 +468,9 @@ ipcMain.on('new-os', async (event, osData) => {
       valor: osData.valor,
       dataEntrada: new Date(),
       dataConclusao: '',
-      idCliente: osData.idCliente || ''
+      idCliente: osData.idCliente || '',
+      worker: osData.worker,
+      notes: osData.worker
     });
 
     await novaOS.save();

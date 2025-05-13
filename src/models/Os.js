@@ -29,6 +29,14 @@ const ordemSchema = new Schema({
     valor: {
         type: String,
         required: true
+    },
+    worker: {
+        type: String,
+        required: true
+    },
+    notes: {
+        type: String,
+        required: true
     }
 }, { versionKey: false });
 

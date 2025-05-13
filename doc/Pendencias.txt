@@ -2,6 +2,5 @@
 
 
 crud create faltou confirmação do cliente criado
-falta campo avaliação tecnica, e quem foi o funcionario que fez o concerto
-botão imprimir OS
+falta campo avaliação tecnica, e quem foi o funcionario que fez o concerto <- Talvez já está pronto só falta testar
 campos peças substituidas

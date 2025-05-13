@@ -16,6 +16,8 @@ const model = document.getElementById('inputModel');
 const defect = document.getElementById('inputDefect');
 const status = document.getElementById('inputStatus');
 const cost = document.getElementById('inputCost');
+const worker = document.getElementById('inputWorker');
+const notes = document.getElementById('inputNotes');
 
 // Evento de submit do formulário
 frmOS.addEventListener('submit', async (event) => {
@@ -28,7 +30,9 @@ frmOS.addEventListener('submit', async (event) => {
         model.value,
         defect.value,
         status.value,
-        cost.value
+        cost.value,
+        worker.value,
+        notes.value
     );
 
     const ordem = {
@@ -38,7 +42,9 @@ frmOS.addEventListener('submit', async (event) => {
         modelo: model.value,
         defeito: defect.value,
         status: status.value,
-        valor: cost.value
+        valor: cost.value,
+        funcionario: worker.value,
+        avaliacaoTec: notes.value
     };
     
       
