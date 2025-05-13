@@ -1,5 +1,5 @@
-// processo de renderização
-//tela principal
+// Processo de renderização
+// Tela principal
 
 console.log("processo de renderização ")
 
