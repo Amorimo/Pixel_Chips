@@ -600,8 +600,10 @@ async function relatorioEstoque() {
 // == Fim Relatório de Estoque
 // ====================================================================================================
 
-// ====================================================================================================
-// Clientes - CRUD Read
+
+
+// ============================================================
+// == CRUD Read ===============================================
 
 // Validação de busca (preenchimento obrigatório)
 ipcMain.on('validate-search', () => {
@@ -656,6 +658,81 @@ ipcMain.on('search-name', async (event, name) => {
   }
 })
 
-// Fim - Clientes - CRUD Read
+// == Fim - CRUD Read =========================================
+// ============================================================
+// ============================================================
+// == CRUD Delete =============================================
+
+ipcMain.on('delete-client', async (event, id) => {
+  console.log(id) // teste do passo 2 (recebimento do id)
+  try {
+      //importante - confirmar a exclusão
+      //client é o nome da variável que representa a janela
+      const { response } = await dialog.showMessageBox(client, {
+          type: 'warning',
+          title: "Atenção!",
+          message: "Deseja excluir este cliente?\nEsta ação não poderá ser desfeita.",
+          buttons: ['Cancelar', 'Excluir'] //[0, 1]
+      })
+      if (response === 1) {
+          console.log("teste do if de excluir")
+          //Passo 3 - Excluir o registro do cliente
+          const delClient = await clientModel.findByIdAndDelete(id)
+          event.reply('reset-form')
+      }
+  } catch (error) {
+      console.log(error)
+  }
+})
+
+// == Fim - CRUD Delete =======================================
 // ============================================================
 
+// ============================================================
+// == CRUD Update =============================================
+
+ipcMain.on('update-client', async (event, client) => {
+  console.log(client) //teste importante (recebimento dos dados do cliente)
+  try {
+      // criar uma nova de estrutura de dados usando a classe modelo. Atenção! Os atributos precisam ser idênticos ao modelo de dados Clientes.js e os valores são definidos pelo conteúdo do objeto cliente
+      const updateClient = await clientModel.findByIdAndUpdate(
+          client.idCli,
+          {
+              nomeCliente: client.nameCli,
+              cpfCliente: client.cpfCli,
+              emailCliente: client.emailCli,
+              foneCliente: client.phoneCli,
+              cepCliente: client.cepCli,
+              logradouroCliente: client.addressCli,
+              numeroCliente: client.numberCli,
+              complementoCliente: client.complementCli,
+              bairroCliente: client.neighborhoodCli,
+              cidadeCliente: client.cityCli,
+              ufCliente: client.ufCli
+          },
+          {
+              new: true
+          }
+      )
+      // Mensagem de confirmação
+      dialog.showMessageBox({
+          //customização
+          type: 'info',
+          title: "Aviso",
+          message: "Dados do cliente alterados com sucesso",
+          buttons: ['OK']
+      }).then((result) => {
+          //ação ao pressionar o botão (result = 0)
+          if (result.response === 0) {
+              //enviar um pedido para o renderizador limpar os campos e resetar as configurações pré definidas (rótulo 'reset-form' do preload.js
+              event.reply('reset-form')
+          }
+      })
+
+  } catch (error) {
+      console.log(error)
+  }
+})
+
+// == Fim - CRUD Update =======================================
+// ============================================================
