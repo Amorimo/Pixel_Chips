@@ -4,6 +4,9 @@ const {  app, BrowserWindow, nativeTheme, Menu, ipcMain, dialog, shell } = requi
 // Linha relacionada ao preload.js
 const path = require('node:path')
 
+const mongoose = require('mongoose');
+
+
 
 
 // Importação dos métodos conectar e desconectar (módulo de conexão)
@@ -452,38 +455,130 @@ try {
 // == Fim - relatório de clientes =============================
 // ============================================================
 
+// == Buscar cliente para vincular na OS ======================
+
+ipcMain.on('search-clients', async (event) => {
+  try {
+      const clients = await clientModel.find().sort({ nomeCliente: 1 })
+      //console.log(clients)
+      event.reply('list-clients', JSON.stringify(clients))
+  } catch (error) {
+      console.log(error)
+  }
+})
+
+// == Fim - Buscar cliente para vincular na OS ================
+
 // ====================================================================================================
 // Os - CRUD Create
-ipcMain.on('new-os', async (event, osData) => {
-  console.log("Nova OS recebida:", osData);
+// Validação de busca (preenchimento obrigatório Id Cliente-OS)
+ipcMain.on('validate-client', (event) => {
+  dialog.showMessageBox({
+      type: 'warning',
+      title: "Aviso!",
+      message: "É obrigatório vincular o cliente na Ordem de Serviço",
+      buttons: ['OK']
+  }).then((result) => {
+      //ação ao pressionar o botão (result = 0)
+      if (result.response === 0) {
+          event.reply('set-search')
+      }
+  })
+})
 
+ipcMain.on('new-os', async (event, os) => {
+  //importante! teste de recebimento dos dados da os (passo 2)
+  console.log(os)
+  // Cadastrar a estrutura de dados no banco de dados MongoDB
   try {
-    const novaOS = new osModel({
-      nomeCliente: osData.nomeCliente,
-      foneCliente: osData.foneCliente,
-      console: osData.console,
-      modelo: osData.modelo,
-      defeito: osData.defeito,
-      status: osData.status,
-      valor: osData.valor,
-      dataEntrada: new Date(),
-      dataConclusao: '',
-      idCliente: osData.idCliente || '',
-      worker: osData.worker,
-      notes: osData.worker
-    });
-
-    await novaOS.save();
-
-    event.reply('reset-form-os'); // avisa o renderer pra resetar form
+      // criar uma nova de estrutura de dados usando a classe modelo. Atenção! Os atributos precisam ser idênticos ao modelo de dados OS.js e os valores são definidos pelo conteúdo do objeto os
+      const newOS = new osModel({
+          idCliente: os.idClient_OS,
+          nomeCliente: os.nameClient_OS,
+          foneCliente: os.phoneClient_OS,
+          statusOS: os.stat_OS,
+          console: os.computer_OS,
+          modelo: os.serial_OS,
+          problema: os.problem_OS,
+          observacao: os.obs_OS,
+          tecnico: os.specialist_OS,
+          diagnostico: os.diagnosis_OS,
+          pecas: os.parts_OS,
+          valor: os.total_OS
+      })
+      // salvar os dados da OS no banco de dados
+      await newOS.save()
+      // Mensagem de confirmação
+      dialog.showMessageBox({
+          //customização
+          type: 'info',
+          title: "Aviso",
+          message: "OS gerada com sucesso",
+          buttons: ['OK']
+      }).then((result) => {
+          //ação ao pressionar o botão (result = 0)
+          if (result.response === 0) {
+              //enviar um pedido para o renderizador limpar os campos e resetar as configurações pré definidas (rótulo 'reset-form' do preload.js
+              event.reply('reset-form')
+          }
+      })
   } catch (error) {
-    console.error("Erro ao salvar OS:", error);
+      console.log(error)
   }
-});
-
+})
 
 // == Fim -Os - CRUD Create
 // ============================================================
+
+// == Buscar OS - CRUD Read ===================================
+
+ipcMain.on('search-os', async (event) => {
+  prompt({
+      title: 'Buscar OS',
+      label: 'Digite o número da OS:',
+      inputAttrs: {
+          type: 'text'
+      },
+      type: 'input',
+      width: 400,
+      height: 200
+  }).then(async (result) => {
+      // buscar OS pelo id (verificar formato usando o mongoose - importar no início do main)
+      if (result !== null) {
+          // Verificar se o ID é válido (uso do mongoose - não esquecer de importar)
+          if (mongoose.Types.ObjectId.isValid(result)) {
+              try {
+                  const dataOS = await osModel.findById(result)
+                  if (dataOS) {
+                      console.log(dataOS) // teste importante
+                      // enviando os dados da OS ao rendererOS
+                      // OBS: IPC só trabalha com string, então é necessário converter o JSON para string JSON.stringify(dataOS)
+                      event.reply('render-os', JSON.stringify(dataOS))
+                  } else {
+                      dialog.showMessageBox({
+                          type: 'warning',
+                          title: "Aviso!",
+                          message: "OS não encontrada",
+                          buttons: ['OK']
+                      })
+                  }
+              } catch (error) {
+                  console.log(error)
+              }
+          } else {
+              dialog.showMessageBox({
+                  type: 'error',
+                  title: "Atenção!",
+                  message: "Formato do número da OS inválido.\nVerifique e tente novamente.",
+                  buttons: ['OK']
+              })
+          }
+      }
+  })
+})
+
+// == Fim - Buscar OS - CRUD Read =============================
+
 // ====================================================================================================
 // Estoque - CRUD Create
 ipcMain.on('new-estoque', async (event, estoqueData) => {
@@ -510,28 +605,6 @@ ipcMain.on('new-estoque', async (event, estoqueData) => {
 // == Fim Estoque CRUD Create
 // ====================================================================================================
 
-// ====================================================================================================
-// Financeiro - CRUD Create
-ipcMain.on('new-financeiro', async (event, financeiroData) => {
-  console.log("Novo lançamento financeiro recebido:", financeiroData);
-
-  try {
-    const novoLancamento = new Financeiro({
-      tipo: financeiroData.tipo, // 'Receita' ou 'Despesa'
-      descricao: financeiroData.descricao,
-      valor: financeiroData.valor,
-      data: financeiroData.data ? new Date(financeiroData.data) : new Date()
-    });
-
-    await novoLancamento.save();
-
-    event.reply('reset-form-financeiro'); // avisa o renderer pra limpar o formulário
-  } catch (error) {
-    console.error("Erro ao salvar lançamento financeiro:", error);
-  }
-});
-// == Fim Financeiro CRUD Create
-// ====================================================================================================
 
 // ====================================================================================================
 // Relatório de Estoque
@@ -623,7 +696,10 @@ ipcMain.on('search-name', async (event, name) => {
   //RegExp(name, 'i') - i (insensitive / Ignorar maiúsculo ou minúsculo)
   try {
       const dataClient = await clientModel.find({
-          nomeCliente: new RegExp(name, 'i')
+        $or: [
+          { nomeCliente: new RegExp(name, 'i') },
+          { cpfCliente: new RegExp(name, 'i') }
+        ]
       })
       console.log(dataClient) // teste passos 3 e 4 (importante!)
 

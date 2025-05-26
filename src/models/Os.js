@@ -1,43 +1,58 @@
-const { model, Schema } = require('mongoose');
+/**
+ * Modelo de dados para construção das coleções("tabelas")
+ * OS
+ */
 
-const ordemSchema = new Schema({
-    nomeCliente: {
-        type: String,
-        required: true
+// importação dos recursos do framework mongoose
+const { model, Schema } = require('mongoose')
+
+// criação da estrutura da coleção OS
+const osSchema = new Schema({
+    dataEntrada: {
+        type: Date,
+        default: Date.now
     },
+    idCliente: {
+        type: String,        
+    },
+
+    nomeCliente: {
+        type: String
+    },
+
     foneCliente: {
-        type: String,
-        required: true
+        type: String
+    },
+
+    statusOS: {
+        type: String
     },
     console: {
-        type: String,
-        required: true
+        type: String
     },
     modelo: {
-        type: String,
-        required: true
+        type: String        
     },
-    defeito: {
-        type: String,
-        required: true
+    problema: {
+        type: String  
     },
-    status: {
-        type: String,
-        enum: ['Recebido', 'Em andamento', 'Aguardando peça', 'Finalizado'],
-        default: 'Recebido'
+    observacao: {
+        type: String
+    },
+    tecnico: {
+        type: String  
+    },
+    diagnostico: {
+        type: String  
+    },
+    pecas: {
+        type: String 
     },
     valor: {
-        type: String,
-        required: true
+        type: String 
     },
-    worker: {
-        type: String,
-        required: true
-    },
-    notes: {
-        type: String,
-        required: true
-    }
-}, { versionKey: false });
+}, {versionKey: false}) //não versionar os dados armazenados
 
-module.exports = model('OrdensServico', ordemSchema);
+// exportar para o main o modelo de dados
+// OBS: OS 
+module.exports = model('OS', osSchema)

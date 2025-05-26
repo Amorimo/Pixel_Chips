@@ -1,10 +1,4 @@
 
-Atividade 5 (Busca do cliente pelo CPF)
-- Criar um botão para pesquisar o cliente pelo CPF
-DESAFIO não obrigatório valendo 1 crédito a mais (upgrade de nota) vincular a pesquisa do CPF no mesmo campo de busca do nome (tanto faz pesquisar pelo nome ou CPF)
-
-Atividade 6 (Cadastro de clientes - CRUD completo)
-cadastrar um novo cliente, pesquisar, alterar algumas coisas, pesquisar novamente e excluir.
 
 Atividade 7 - OS CRUD completo
 Emitir 10 OS

@@ -22,6 +22,10 @@ contextBridge.exposeInMainWorld('api', {
   // Cadastro de Ordem de Serviço
   newOS: (osData) => ipcRenderer.send('new-os', osData),
   resetFormOS: (callback) => ipcRenderer.on('reset-form-os', callback),
+  renderOS: (dataOS) => ipcRenderer.on('render-os', dataOS),
+  validateClient: () => ipcRenderer.send('validate-client'),
+
+
 
   // Cadastro de Financeiro
   newFinanceiro: (financeiroData) => ipcRenderer.send('new-financeiro', financeiroData),

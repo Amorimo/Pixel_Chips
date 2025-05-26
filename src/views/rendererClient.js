@@ -1,44 +1,29 @@
-function buscarCEP() {
-    let cep = document.getElementById("inputCEPClient").value.replace(/\D/g, ""); // Remove caracteres não numéricos
-    console.log("CEP digitado:", cep);
-
-    if (cep.length !== 8) {
-        console.warn("CEP inválido! Digite um CEP com 8 números.");
-        alert("CEP inválido! Digite um CEP com 8 números.");
-        return;
-    }
-
-    let urlAPI = `https://viacep.com.br/ws/${cep}/json/`;
-    console.log("Buscando dados na URL:", urlAPI);
-
-    fetch(urlAPI)
-        .then(response => {
-            console.log("Resposta recebida:", response);
-            return response.json();
-        })
-        .then(dados => {
-            console.log("Dados recebidos:", dados);
-
-            if (dados.erro) {
-                console.error("CEP não encontrado!");
-                alert("CEP não encontrado!");
-                return;
-            }
-
-            // Preenchendo os campos
-            document.getElementById("inputAddressClient").value = dados.logradouro || "";
-            document.getElementById("inputNeighborhoodClient").value = dados.bairro || "";
-            document.getElementById("inputCityClient").value = dados.localidade || "";
-            document.getElementById("inputUFClient").value = dados.uf || "";
-
-            console.log("Campos preenchidos com sucesso!");
-        })
-        .catch(error => console.error("Erro ao buscar CEP:", error));
-}
-
-
-
 // ============================================================
+// == Buscar CEP ==============================================
+function buscarCEP() {
+    //console.log("teste do evento blur")
+    //armazenar o cep digitado na variável
+    let cep = document.getElementById('inputCEPClient').value
+    //console.log(cep) //teste de recebimento do CEP
+    //"consumir" a API do ViaCEP
+    let urlAPI = `https://viacep.com.br/ws/${cep}/json/`
+    //acessando o web service par abter os dados
+    fetch(urlAPI)
+        .then(response => response.json())
+        .then(dados => {
+            //extração dos dados
+            document.getElementById('inputAddressClient').value = dados.logradouro
+            document.getElementById('inputNeighborhoodClient').value = dados.bairro
+            document.getElementById('inputCityClient').value = dados.localidade
+            document.getElementById('inputUFClient').value = dados.uf
+        })
+        .catch(error => console.log(error))
+}
+// == Fim - buscar CEP ========================================
+// ============================================================
+
+
+// == Fim - validar CPF =======================================
 // ============================================================
 
 // vetor global que será usado na manipulação dos dados
@@ -212,73 +197,90 @@ function buscarCliente() {
 }
 
 // setar o cliente não cadastrado (recortar do campo de busca e colar no campo nome)
+// Setar o cliente não cadastrado
 api.setClient((args) => {
-    // criar uma variável para armazenar o valor digitado no campo de busca (nome ou cpf)
-    let campoBusca = document.getElementById('searchClient').value
-    // foco no campo de nome do cliente
-    nameClient.focus()
-    // remover o valor digitado no campo de busca
-    foco.value = ""
-    // preencher o campo de nome do cliente com o nome da busca
-    nameClient.value = campoBusca
+    let campoBusca = document.getElementById('searchClient').value.trim()
 
+    // Regex para verificar se o valor é só número (CPF) teste
+    if (/^\d{11}$/.test(campoBusca)) {
+        // É um número → CPF
+        cpfClient.focus()
+        foco.value = ""
+        cpfClient.value = campoBusca
+    } 
+    else if(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/.test(campoBusca)){
+        cpfClient.focus()
+        foco.value = ""
+        cpfClient.value = campoBusca
+    }
+    else {
+        // Não é número → Nome
+        nameClient.focus()
+        foco.value = ""
+        nameClient.value = campoBusca
+    }
 })
 
-// == Fim - CRUD Read =========================================
-// ============================================================
-
-
-// ============================================================
-// == CRUD Delete =============================================
-
-function excluirCliente() {
-    console.log(id.value) // Passo 1 (receber do form o id)
-    api.deleteClient(id.value) // Passo 2 (enviar o id ao main)
+// ======= Crud Delete =================================================================
+function excluirClient() {
+    console.log(id.value)
+    api.deleteClient(id.value)
 }
 
-// == Fim - CRUD Delete =======================================
-// ============================================================
 
-
-// ============================================================
-// == Reset form ==============================================
+//====== Reset form =======================================================================
 function resetForm() {
-    // Limpar os campos e resetar o formulário com as configurações pré definidas
-    location.reload()
+location.reload()
 }
 
-// Recebimento do pedido do main para resetar o form
-api.resetForm((args) => {
+api.resetForm((args)=>{
     resetForm()
 })
 
-// == Fim - reset form ========================================
-// ============================================================
-// Mascara do CPF
+// === Função para aplicar máscara no CPF ===
+function aplicarMascaraCPF(campo) {
+    let cpf = campo.value.replace(/\D/g, ""); // Remove caracteres não numéricos
 
-function aplicarMascaraCPF() {
-    const input = document.getElementById('inputCPFClient');
-    input.addEventListener('input', () => {
-        let value = input.value.replace(/\D/g, ''); // Remove tudo que não é número
+    if (cpf.length > 3) cpf = cpf.replace(/^(\d{3})(\d)/, "$1.$2");
+    if (cpf.length > 6) cpf = cpf.replace(/^(\d{3})\.(\d{3})(\d)/, "$1.$2.$3");
+    if (cpf.length > 9) cpf = cpf.replace(/^(\d{3})\.(\d{3})\.(\d{3})(\d)/, "$1.$2.$3-$4");
 
-        if (value.length > 11) {
-            value = value.slice(0, 11); // Limita a 11 dígitos
-        }
-
-        value = value.replace(/(\d{3})(\d)/, '$1.$2');
-        value = value.replace(/(\d{3})(\d)/, '$1.$2');
-        value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
-
-        input.value = value;
-    });
+    campo.value = cpf;
 }
-
-// Chame a função ao carregar a página
-window.addEventListener('DOMContentLoaded', () => {
-    aplicarMascaraCPF();
-});
-
 
 function validarCPF() {
-   
+    const cpf = cpfClient.value.replace(/\D/g, "");
+    cpfClient.classList.remove("input-valido", "input-invalido");
+
+    if (cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) {
+        cpfClient.classList.add("input-invalido");
+        return false;
+    }
+
+    let soma = 0, resto;
+
+    for (let i = 1; i <= 9; i++) soma += parseInt(cpf[i - 1]) * (11 - i);
+    resto = (soma * 10) % 11;
+    if (resto === 10 || resto === 11) resto = 0;
+    if (resto !== parseInt(cpf[9])) {
+        cpfClient.classList.add("input-invalido");
+        return false;
+    }
+
+    soma = 0;
+    for (let i = 1; i <= 10; i++) soma += parseInt(cpf[i - 1]) * (12 - i);
+    resto = (soma * 10) % 11;
+    if (resto === 10 || resto === 11) resto = 0;
+    if (resto !== parseInt(cpf[10])) {
+        cpfClient.classList.add("input-invalido");
+        return false;
+    }
+
+    cpfClient.classList.add("input-valido");
+    return true;
 }
+
+
+// Adicionar eventos para CPF
+cpfClient.addEventListener("input", () => aplicarMascaraCPF(cpfClient));
+cpfClient.addEventListener("blur", validarCPF);
