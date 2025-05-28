@@ -64,6 +64,14 @@ document.addEventListener('click', (e) => {
 // == Fim - busca avançada =====================================
 // =============================================================
 
+
+// Iniciar a janela OS alterando as propriedades de alguns elementos
+document.addEventListener('DOMContentLoaded', () => {
+    // Desativar os botões
+    btnUpdate.disabled = true
+    btnDelete.disabled = true    
+})
+
 // criar um vetor para manipulação dos dados da OS
 let arrayOS = []
 
@@ -117,8 +125,25 @@ frmOS.addEventListener('submit', async (event) => {
             // uso do preload.js
             api.newOS(os)
         } else {
-            //Editar OS
-
+             //Editar OS
+            //Gerar OS
+            //Criar um objeto para armazenar os dados da OS antes de enviar ao main
+            const os = {
+                id_OS: idOS.value,
+                idClient_OS: idClient.value,
+                stat_OS: statusOS.value,
+                computer_OS: computer.value,
+                serial_OS: serial.value,
+                problem_OS: problem.value,
+                obs_OS: obs.value,
+                specialist_OS: specialist.value,
+                diagnosis_OS: diagnosis.value,
+                parts_OS: parts.value,
+                total_OS: total.value
+            }
+            // Enviar ao main o objeto os - (Passo 2: fluxo)
+            // uso do preload.js
+            api.updateOS(os)
         }
     }
 })
@@ -162,9 +187,29 @@ api.renderOS((event, dataOS) => {
     diagnosis.value = os.diagnostico
     parts.value = os.pecas
     total.value = os.valor
+
+    // desativar o botão adicionar
+    btnCreate.disabled = true
+    // ativar os botões editar e excluir
+    btnUpdate.disabled = false
+    btnDelete.disabled = false 
+    
+    InputSearchClient.disabled=true
 })
 
 // == Fim - Buscar OS - CRUD Read =============================
+// ============================================================
+
+
+// ============================================================
+// == CRUD Delete =============================================
+
+function removeOS() {
+    console.log(idOS.value) // Passo 1 (receber do form o id da OS)
+    api.deleteOS(idOS.value) // Passo 2 (enviar o id da OS ao main)
+}
+
+// == Fim - CRUD Delete =======================================
 // ============================================================
 
 

@@ -24,6 +24,9 @@ contextBridge.exposeInMainWorld('api', {
   resetFormOS: (callback) => ipcRenderer.on('reset-form-os', callback),
   renderOS: (dataOS) => ipcRenderer.on('render-os', dataOS),
   validateClient: () => ipcRenderer.send('validate-client'),
+  deleteOS: (idOS) => ipcRenderer.send('delete-os', idOS),
+  updateOS: (os) => ipcRenderer.send('update-os', os),
+
 
 
 
@@ -46,4 +49,8 @@ contextBridge.exposeInMainWorld('api', {
   listClients: (clients) => ipcRenderer.on('list-clients', clients),
   searchOS: () => ipcRenderer.send('search-os'),
   setSearch: (args) => ipcRenderer.on('set-search', args),
+  searchIdClient: (idClient) => ipcRenderer.send('search-idClient', idClient),
+  renderIdClient: (dataClient) => ipcRenderer.on('render-idClient', dataClient),
+  updateOS: (os) => ipcRenderer.send('update-os', os),
+  printOS: () => ipcRenderer.send('print-os')
 });
