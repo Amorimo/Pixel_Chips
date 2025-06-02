@@ -445,7 +445,7 @@ try {
 
   // salvar temporariamente o arquivo
   doc.save(filePath)
-  // abrir o arquivo no aplicativo padrão de leitura de pdf do computador do usuário
+  // abrir o arquivo no aplicativo padrão de leitura de pdf do console do usuário
   shell.openPath(filePath)
 } catch (error) {
   console.log(error)
@@ -703,23 +703,39 @@ ipcMain.on('print-os', async (event) => {
                       const doc = new jsPDF('p', 'mm', 'a4')
                       const imagePath = path.join(__dirname, 'src', 'public', 'img', 'logo.png')
                       const imageBase64 = fs.readFileSync(imagePath, { encoding: 'base64' })
-                      doc.addImage(imageBase64, 'PNG', 5, 8)
+                      doc.addImage(imageBase64, 'PNG', 3, 1, 45, 45)
                       doc.setFontSize(18)
+                      doc.setFont("helvetica", "bold")
                       doc.text("OS:", 14, 45) //x=14, y=45
                       doc.setFontSize(12)
 
                       // Extração dos dados do cliente vinculado a OS
                       dataClient.forEach((c) => {
+                        doc.setFont("helvetica", "bold")
                           doc.text("Cliente:", 14, 65),
-                              doc.text(c.nomeCliente, 34, 65),
-                              doc.text(c.foneCliente, 85, 65),
-                              doc.text(c.emailCliente || "N/A", 130, 65)
+                          doc.setFont("helvetica", "normal")
+                              doc.text(c.nomeCliente, 30, 65),
+                              doc.setFont("helvetica", "bold")
+                              doc.text("Tel:", 90, 65),
+                              doc.setFont("helvetica", "normal")
+                              doc.text(c.foneCliente, 97, 65),
+                              doc.setFont("helvetica", "bold")
+                              doc.text("E-Mail:", 130, 65),
+                              doc.setFont("helvetica", "normal")
+                              doc.text(c.emailCliente || "N/A", 145, 65)
                           //...
                       })
 
-                      // Extração dos dados da OS                        
-                      doc.text(String(dataOS.computador), 14, 85)
-                      doc.text(String(dataOS.problema), 80, 85)
+                      // Extração dos dados da OS        
+                      doc.setFont("helvetica", "bold")
+                      doc.text("Console:", 14, 80)    
+                      doc.setFont("helvetica", "normal")       
+                      doc.text(String(dataOS.console), 14, 85)
+                      doc.setFont("helvetica", "bold")
+                      doc.text("Problema:", 75, 80 )
+                      doc.setFont("helvetica", "normal")
+                      doc.text(String(dataOS.problema), 75, 85)
+                      doc.text(":", 80, 80 )
 
                       // Texto do termo de serviço
                       doc.setFontSize(10)
@@ -743,7 +759,7 @@ ipcMain.on('print-os', async (event) => {
                       const filePath = path.join(tempDir, 'os.pdf')
                       // salvar temporariamente o arquivo
                       doc.save(filePath)
-                      // abrir o arquivo no aplicativo padrão de leitura de pdf do computador do usuário
+                      // abrir o arquivo no aplicativo padrão de leitura de pdf do console do usuário
                       shell.openPath(filePath)
                   } else {
                       dialog.showMessageBox({
@@ -783,17 +799,19 @@ async function printOS(osId) {
       const doc = new jsPDF('p', 'mm', 'a4')
       const imagePath = path.join(__dirname, 'src', 'public', 'img', 'logo.png')
       const imageBase64 = fs.readFileSync(imagePath, { encoding: 'base64' })
-      doc.addImage(imageBase64, 'PNG', 5, 8)
+      doc.addImage(imageBase64, 'PNG', 3, 1, 45, 45)
       doc.setFontSize(18)
       doc.text("OS:", 14, 45) //x=14, y=45
       doc.setFontSize(12)
 
       // Extração dos dados do cliente vinculado a OS
       dataClient.forEach((c) => {
-          doc.text("Cliente:", 14, 65),
-              doc.text(c.nomeCliente, 34, 65),
-              doc.text(c.foneCliente, 85, 65),
-              doc.text(c.emailCliente || "N/A", 130, 65)
+        doc.text("Cliente:", 14, 65),
+        doc.text(c.nomeCliente, 30, 65),
+        doc.text("Tel:", 90, 65),
+        doc.text(c.foneCliente, 97, 65),
+        doc.text("E-Mail:", 130, 65),
+        doc.text(c.emailCliente || "N/A", 145, 65)
           //...
       })
 
@@ -823,7 +841,7 @@ O cliente autoriza a realização dos serviços técnicos descritos nesta ordem,
       const filePath = path.join(tempDir, 'os.pdf')
       // salvar temporariamente o arquivo
       doc.save(filePath)
-      // abrir o arquivo no aplicativo padrão de leitura de pdf do computador do usuário
+      // abrir o arquivo no aplicativo padrão de leitura de pdf do console do usuário
       shell.openPath(filePath)
 
   } catch (error) {
